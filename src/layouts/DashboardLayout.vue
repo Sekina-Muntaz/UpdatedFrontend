@@ -1,6 +1,13 @@
 <template>
   <div class="dashboard-layout">
-    <aside class="dashboard-layout__sidenav">
+    
+ <div
+      v-if="showMobileSidenav"
+      class="dashboard-layout__overlay"
+      @click="closeMobileSidenav"
+    ></div>
+
+    <aside class="dashboard-layout__sidenav"  :class="{ 'dashboard-layout__sidenav--open': showMobileSidenav }">
       <DashboardSideNav class="dashboard-layout__sidenav-panel" />
     </aside>
 
@@ -18,6 +25,8 @@
           @profile="onProfile"
           @switch-account="onSwitchAccount"
           @logout="openSignOutModal"
+
+           @toggle-menu="toggleMobileSidenav"
         />
       </header>
 
@@ -43,6 +52,24 @@ import { useAuthStore } from "@/stores/auth";
 import DashboardSideNav from "@/components/dashboard/DashboardSideNav.vue";
 import DashboardTopNav from "@/components/dashboard/DashboardTopNav.vue";
 import SignOutModal from "@/components/dashboard/SignOutModal.vue";
+
+const emit = defineEmits([
+  "search",
+  "notifications",
+  "switch-account",
+  "logout",
+  "toggle-menu" // ADDED
+]);
+
+const showMobileSidenav = ref(false);
+
+const toggleMobileSidenav = () => {
+  showMobileSidenav.value = !showMobileSidenav.value;
+};
+
+const closeMobileSidenav = () => {
+  showMobileSidenav.value = false;
+};
 
 const route = useRoute();
 const router = useRouter();
@@ -105,6 +132,18 @@ const confirmLogout = async () => {
 </script>
 
 <style scoped>
+
+
+.dashboard-topnav__menu-button {
+  display: none;
+  border: none;
+  background: transparent;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #003525;
+}
+
 .dashboard-layout {
   display: grid;
   grid-template-columns: 15.5rem 1fr;
@@ -145,6 +184,14 @@ const confirmLogout = async () => {
   box-sizing: border-box;
 }
 
+.dashboard-layout__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 40;
+}
+
+
 @media (max-width: 1024px) {
   .dashboard-layout {
     grid-template-columns: 15.5rem 1fr;
@@ -161,11 +208,24 @@ const confirmLogout = async () => {
   }
 
   .dashboard-layout__sidenav {
-    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 15.5rem;
+    z-index: 50;
+
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  .dashboard-layout__sidenav--open {
+    transform: translateX(0);
   }
 
   .dashboard-layout__content {
     padding: 0.875rem;
   }
 }
+
 </style>

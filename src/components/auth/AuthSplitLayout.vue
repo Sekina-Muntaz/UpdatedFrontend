@@ -42,6 +42,7 @@ import { RouterLink } from "vue-router";
 import AppLogo from "@/components/shared/AppLogo.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import backIcon from "@/assets/icons/back-arrow.svg";
+import loginImage from "@/assets/images/login-image.svg";
 </script>
 
 <style scoped>

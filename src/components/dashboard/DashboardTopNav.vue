@@ -1,5 +1,16 @@
 <template>
   <div class="dashboard-topnav">
+
+    
+ <button
+    type="button"
+    class="dashboard-topnav__menu-button"
+    aria-label="Open menu"
+    @click="$emit('toggle-menu')"
+  >
+    ☰
+  </button>
+
     <!-- Left: Search -->
     <div class="dashboard-topnav__search">
       <span class="dashboard-topnav__search-icon">
@@ -306,6 +317,15 @@ onBeforeUnmount(() => {
     display: none;
   }
 }
+.dashboard-topnav__menu-button {
+  display: none;
+  border: none;
+  background: transparent;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #003525;
+}
 
 @media (max-width: 640px) {
   .dashboard-topnav {
@@ -320,4 +340,15 @@ onBeforeUnmount(() => {
     display: none;
   }
 }
+
+
+
+@media (max-width: 768px) {
+  .dashboard-topnav__menu-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
 </style>

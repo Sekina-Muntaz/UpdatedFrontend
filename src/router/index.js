@@ -4,7 +4,7 @@ import { useAuthStore } from "@/stores/auth";
 const LoginView = () => import("@/views/auth/LoginView.vue");
 const ProfileView = () => import("@/views/profile/ProfileView.vue");
 const NotFoundView = () => import("@/views/NotFoundView.vue");
-const LandingPageView = () => import("@/components/views/LandingPage.vue");
+const LandingPageView = () => import("@/views/LandingPage.vue");
 const ResetPasswordView = () => import("@/views/auth/ResetPasswordView.vue");
 const CheckEmailView = () => import("@/views/auth/CheckEmailView.vue");
 
@@ -12,7 +12,6 @@ const DashboardLayout = () => import("@/layouts/DashboardLayout.vue");
 
 /**
  * Child views inside dashboard layout
- * Use placeholders for now if content is not ready
  */
 const DashboardHomeView = () => import("@/views/dashboard/DashboardHomeView.vue");
 const OrganizationsView = () => import("@/views/dashboard/OrganizationView.vue");
