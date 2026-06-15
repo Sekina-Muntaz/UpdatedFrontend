@@ -4,8 +4,8 @@ export function loginApi(payload) {
   return api.post('/token/generate-token', payload)
 }
 
-export function logoutApi(payload = {}) {
-  return api.post('/token/logout', payload)
+export function logoutApi(username) {
+  return api.post(`/token/logout/${encodeURIComponent(username)}`)
 }
 
 export function refreshTokenApi(payload) {

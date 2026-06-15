@@ -1,20 +1,32 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 
-const HomeView = () => import("@/views/HomeView.vue");
 const LoginView = () => import("@/views/auth/LoginView.vue");
-const DashboardView = () => import("@/views/dashboard/DashboardView.vue");
 const ProfileView = () => import("@/views/profile/ProfileView.vue");
 const NotFoundView = () => import("@/views/NotFoundView.vue");
 const LandingPageView = () => import("@/components/views/LandingPage.vue");
 const ResetPasswordView = () => import("@/views/auth/ResetPasswordView.vue");
 const CheckEmailView = () => import("@/views/auth/CheckEmailView.vue");
+
 const DashboardLayout = () => import("@/layouts/DashboardLayout.vue");
+
+/**
+ * Child views inside dashboard layout
+ * Use placeholders for now if content is not ready
+ */
+const DashboardHomeView = () => import("@/views/dashboard/DashboardHomeView.vue");
+const OrganizationsView = () => import("@/views/dashboard/OrganizationView.vue");
+const InvoicesView = () => import("@/views/dashboard/InvoiceView.vue");
+
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-  
+    {
+      path: "/",
+      name: "landing",
+      component: LandingPageView,
+    },
     {
       path: "/login",
       name: "login",
@@ -22,48 +34,55 @@ const router = createRouter({
       meta: { guestOnly: true },
     },
     {
-      path: "/dashboard",
-      name: "dashboard",
-      component: DashboardLayout,
-      meta: { requiresAuth: true },
-      children: [
-        {
-          path: "",
-          name: "dashboard-home",
-          component: DashboardView,
-        }
-      ],
-    },
-    {
-      path: "/profile",
-      name: "profile",
-      component: ProfileView,
-
-      meta: {
-        requiresAuth: true,
-        permissions: ["VIEW_DASHBOARD"],
-      },
-    },
-    {
-      path: "/:pathMatch(.*)*",
-      name: "not-found",
-      component: NotFoundView,
-    },
-    {
-      path: "/",
-      name: "landing",
-      component: LandingPageView,
-    },
-    {
       path: "/reset-password",
       name: "reset-password",
       component: ResetPasswordView,
+      meta: { guestOnly: true },
     },
     {
       path: "/check-email",
       name: "CheckEmail",
       component: CheckEmailView,
       meta: { guestOnly: true },
+    },
+
+    /**
+     * Dashboard shell
+     */
+    {
+      path: "/app",
+      component: DashboardLayout,
+      meta: { requiresAuth: true },
+      children: [
+        {
+          path: "",
+          redirect: { name: "dashboard" },
+        },
+        {
+          path: "dashboard",
+          name: "dashboard",
+          component: DashboardHomeView,
+          meta: { requiresAuth: true, title: "Dashboard" },
+        },
+        {
+          path: "organizations",
+          name: "organizations",
+          component: OrganizationsView,
+          meta: { requiresAuth: true, title: "Organizations" },
+        },
+         {
+          path: "invoices",
+          name: "invoices",
+          component: InvoicesView,
+          meta: { requiresAuth: true, title: "Invoices" },
+        }
+      ],
+    },
+
+    {
+      path: "/:pathMatch(.*)*",
+      name: "not-found",
+      component: NotFoundView,
     },
   ],
 });
@@ -94,7 +113,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   // if (to.meta.guestOnly && authStore.isAuthenticated) {
-  //   return next("/dashboard");
+  //   return next({ name: "dashboard" });
   // }
 
   if (to.meta.requiresAuth) {

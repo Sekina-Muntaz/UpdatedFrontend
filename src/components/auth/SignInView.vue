@@ -110,7 +110,8 @@ const handleLogin = async () => {
       password: form.password,
     });
 
-    router.push("/dashboard");
+    // router.push("/app/dashboard");
+    router.push({ name: "dashboard" });
   } catch (error) {
     errorMessage.value =
       error.response?.data?.message ||

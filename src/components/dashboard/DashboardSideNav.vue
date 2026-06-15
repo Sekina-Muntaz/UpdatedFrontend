@@ -1,14 +1,16 @@
 <template>
-  <aside class="dashboard-sidenav">
+  <aside class="dashboard-sidenav" :style="sidenavStyle">
     <!-- Top / brand -->
     <div class="dashboard-sidenav__brand">
       <RouterLink to="/app/dashboard" class="dashboard-sidenav__brand-link">
-        logo
+        <img :src="logo" alt="Logo" class="dashboard-sidenav__logo" />
       </RouterLink>
     </div>
 
     <!-- Navigation -->
     <nav class="dashboard-sidenav__nav" aria-label="Main navigation">
+
+      
       <div
         v-for="item in items"
         :key="item.label"
@@ -22,7 +24,7 @@
           :class="{ 'dashboard-sidenav__item--active': isActive(item) }"
         >
           <span class="dashboard-sidenav__icon">
-            item.icon
+            <img :src="item.icon" alt="" class="dashboard-sidenav__icon-img" />
           </span>
           <span class="dashboard-sidenav__label">{{ item.label }}</span>
         </RouterLink>
@@ -37,7 +39,7 @@
         >
           <span class="dashboard-sidenav__item-left">
             <span class="dashboard-sidenav__icon">
-              item.icon
+              <img :src="item.icon" alt="" class="dashboard-sidenav__icon-img" />
             </span>
             <span class="dashboard-sidenav__label">{{ item.label }}</span>
           </span>
@@ -46,7 +48,7 @@
             class="dashboard-sidenav__chevron"
             :class="{ 'dashboard-sidenav__chevron--open': isOpen(item.label) }"
           >
-            ▾
+            <img src="@/assets/icons/chevron-down.svg" alt="" class="dashboard-sidenav__icon-img" />
           </span>
         </button>
 
@@ -66,14 +68,27 @@
         </div>
       </div>
     </nav>
+
+
+     <div class="dashboard-sidenav__support">
+      <RouterLink to="/app/dashboard" class="dashboard-sidenav__brand-link">
+
+
+        <span class="dashboard-sidenav__icon">
+            <img :src="supportIcon" alt="" class="dashboard-sidenav__icon-img" />
+          </span>
+          <span class="dashboard-sidenav__label">Support</span>
+      </RouterLink>
+    </div>
   </aside>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref,computed } from "vue";
 import { useRoute, RouterLink } from "vue-router";
 
 import logo from "@/assets/brand/logo.png";
+import sidenavBg from "@/assets/images/sidenav-bg.svg";
 
 /**
  * Replace these with your real icons
@@ -87,10 +102,12 @@ import settlementsIcon from "@/assets/icons/settlement.svg";
 import transactionsIcon from "@/assets/icons/transactions.svg";
 import reportsIcon from "@/assets/icons/reports.svg";
 import chargesIcon from "@/assets/icons/charges.svg";
+import supportIcon from "@/assets/icons/support.svg";
 
 const route = useRoute();
 
-const openGroups = ref(["Auction"]); // default open groups if needed
+const openGroups = ref([""]); // default open groups if needed
+// const openGroups = ref(["Auction"]); // default open groups if needed
 
 const items = [
   {
@@ -111,10 +128,15 @@ const items = [
       { label: "Auction Results", to: "/app/auction/results" },
     ],
   },
+  
   {
     label: "Invoices",
-    to: "/app/invoices",
+    // to: "/app/invoices",
     icon: invoicesIcon,
+     children: [
+      { label: "Auction Files", to: "/app/auction/files" },
+      { label: "Auction Results", to: "/app/auction/results" },
+    ],
   },
   {
     label: "Payments",
@@ -160,30 +182,54 @@ const isChildActive = (child) => route.path === child.to;
 const isGroupActive = (item) => {
   return item.children?.some((child) => route.path === child.to);
 };
+
+const sidenavStyle = computed(() => ({
+  backgroundImage: `
+    linear-gradient(
+      180deg,
+      rgba(0, 53, 37, 0.20) 0%,
+      rgba(0, 53, 37, 0.32) 100%
+    ),
+    url(${sidenavBg})
+  `,
+  backgroundPosition: "left center",
+  backgroundSize: "cover",
+  backgroundRepeat: "no-repeat"
+}));
+
 </script>
 
 <style scoped>
+
 .dashboard-sidenav {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(0, 53, 37, 0.96) 0%,
-      rgba(0, 53, 37, 0.88) 100%
-    ),
-    url("/images/coffee-sidenav-bg.jpg") center/cover no-repeat;
   color: #ffffff;
   box-sizing: border-box;
   border-right: 1px solid rgba(255, 255, 255, 0.06);
-}
+  /* width: 16rem; */
+} 
+
+
 
 /* Brand */
-.dashboard-sidenav__brand {
+/* .dashboard-sidenav__brand {
   padding: 1rem 1rem 1.25rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+} */
+
+
+.dashboard-sidenav__brand {
+  padding-top: 1rem;
+  padding-right: 0.5rem;
+  padding-bottom: 1.25rem;
+  padding-left: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
+
 
 .dashboard-sidenav__brand-link {
   display: inline-flex;
@@ -203,6 +249,14 @@ const isGroupActive = (item) => {
   flex-direction: column;
   gap: 0.25rem;
   padding: 1rem 0.5rem 1.25rem;
+  
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  
+  box-sizing: border-box;
+
+
 }
 
 .dashboard-sidenav__item-wrap {
@@ -227,7 +281,7 @@ const isGroupActive = (item) => {
   color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
   font-family: "Nunito", sans-serif;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
 
@@ -239,12 +293,23 @@ const isGroupActive = (item) => {
   background: rgba(255, 255, 255, 0.06);
 }
 
-.dashboard-sidenav__item--active {
+/* .dashboard-sidenav__item--active {
   background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
   position: relative;
-}
+} */
+.dashboard-sidenav__item--active {
+  display: flex;
+  width: 15.9606875rem;   /* 255.371px */
+  padding: 0.6875rem 1.75rem; /* 11px 28px */
+  justify-content: space-between;
+  align-items: center;
 
+  border-left: 0.1875rem solid #68ab00; /* 3px */
+  background: rgba(255, 255, 255, 0.10);
+
+  box-sizing: border-box;
+}
 .dashboard-sidenav__item--active::before {
   content: "";
   position: absolute;
@@ -333,6 +398,21 @@ const isGroupActive = (item) => {
 
 .dashboard-sidenav__child-label {
   white-space: nowrap;
+}
+
+
+
+.dashboard-sidenav__support {
+  margin-top: auto;
+
+  padding-top: 1rem;
+  padding-right: 0.5rem;
+  padding-bottom: 1.25rem;
+  padding-left: 1.25rem;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 /* Tablet */

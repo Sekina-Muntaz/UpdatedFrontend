@@ -103,6 +103,36 @@ defineProps({
   background: #002a20;
 }
 
+.base-button--danger-text {
+  background: #ffffff;
+  color: #e04b3f;
+  border: none;
+}
+
+.base-button--danger-text:hover {
+  background: rgba(224, 75, 63, 0.04);
+}
+
+.base-button--outline {
+  background: #ffffff;
+  color: #1f2d27;
+  border: 1px solid #d9d5ce;
+}
+
+.base-button--outline:hover {
+  background: #f8f6f2;
+}
+
+.base-button--danger {
+  background: #e23a47;
+  color: #ffffff;
+  border: none;
+}
+
+.base-button--danger:hover {
+  background: #d52f3d;
+}
+
 /* translucent button */
 .base-button--glass {
   background: rgba(255, 255, 255, 0.7);
@@ -185,6 +215,42 @@ defineProps({
   line-height: 1rem;
 }
 
+.base-button--dropdown {
+  display: flex;
+  height: 2.5625rem;          /* 41px */
+  padding: 0.625rem 1rem;     /* 10px 16px */
+  align-items: center;
+  gap: 0.625rem;              /* 10px */
+  flex-shrink: 0;
+  align-self: stretch;
+
+  width: 100%;
+  justify-content: flex-start;
+
+  border-radius: 0;
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;            /* adjust if needed */
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.375rem;
+}
+.base-button--modal {
+  display: inline-flex;
+  width: 100%;
+  height: 3.25rem;            /* ~52px */
+  padding: 0 1rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+
+  border-radius: 0.75rem;
+
+  font-family: "Nunito", sans-serif;
+  font-size: 1.125rem;         /* ~18px */
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.375rem;
+}
 /* CTA button */
 .base-button--cta {
   width: 11.625rem;       /* 186px */

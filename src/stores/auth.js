@@ -29,8 +29,11 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: (state) => !!state.token,
     username: (state) => state.user?.username || '',
     fullName: (state) => state.user?.fullName || '',
+    firstName: (state) => state.user?.firstName || '',
+    lastName: (state) => state.user?.lastName || '',
     roles: (state) => state.user?.roles || [],
-    permissions: (state) => state.user?.permissions || []
+    permissions: (state) => state.user?.permissions || [],
+    organisation: (state) => state.user?.organisation || null
   },
 
   actions: {
@@ -73,6 +76,7 @@ export const useAuthStore = defineStore('auth', {
         }
 
         if (user) {
+          console.log ("User=======================",user)
           setUser(user)
         }
 
@@ -82,16 +86,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    // async fetchCurrentUser() {
-    //   try {
-    //     const response = await getCurrentUserApi()
-    //     this.user = response.data
-    //     setUser(response.data)
-    //     return response.data
-    //   } catch (error) {
-    //     throw error
-    //   }
-    // },
+   
 
     async initialize() {
       if (this.initialized) return
@@ -107,25 +102,29 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    // async logout() {
+    //   try {
+    //     await logoutApi({
+    //       refreshToken: this.refreshToken
+    //     })
+    //   } catch (error) {
+    //     // optional: log error
+    //   } finally {
+    //     this.logoutLocal()
+    //   }
+    // },
     async logout() {
-      try {
-        await logoutApi({
-          refreshToken: this.refreshToken
-        })
-      } catch (error) {
-        // optional: log error
-      } finally {
-        this.logoutLocal()
-      }
-    },
-//     async requestPasswordReset(email) {
-//   try {
-//     const response = await requestPasswordResetApi({ email }) 
-//     return response.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// },
+  try {
+    if (this.user?.username) {
+      await logoutApi(this.user.username)
+    }
+  } catch (error) {
+    // optional: log error
+  } finally {
+    this.logoutLocal()
+  }
+},
+
 
 async requestPasswordReset(payload) {
   try {
