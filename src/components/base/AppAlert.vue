@@ -35,19 +35,26 @@ defineProps({
 </script>
 
 <style scoped>
+
 .app-alert {
   display: flex;
-  width: 50rem;              /* 400px */
-  max-width: 100%;
-  min-height: 4.4375rem;     /* 71px */
-  padding: 0.75rem 0.875rem; /* 12px 14px */
-  align-items: flex-start;
-  gap: 0.625rem;             /* 10px */
-  flex-shrink: 0;
 
-  border-radius: 0.5rem;     /* 8px */
-  box-sizing: border-box;
+  width: 100%; /* ✅ key change */
+  max-width: 100%;
+
+  padding: var(--spacing-auto-12, 12px)
+           var(--spacing-auto-14, 14px);
+
+  align-items: flex-start;
+  gap: var(--spacing-auto-10, 10px);
+
+  border-radius: var(--radius-auto-8, 8px);
+  border: var(--stroke-auto-1, 1px) solid
+          var(--color-auto-510605-20, rgba(81, 6, 5, 0.20));
+
+  background: var(--color-auto-510605-5, rgba(81, 6, 5, 0.05));
 }
+
 
 /* Error variation */
 .app-alert--error {
@@ -64,14 +71,13 @@ defineProps({
 }
 
 
+
 .app-alert__content {
-  color: #510605;
+  white-space: normal;
+  line-height: 20px;
 
-  font-family: "Nunito", sans-serif;
-  font-size: 1rem;   /* 14px */
-  font-style: normal;
-  font-weight: 400;
-
-  line-height: 1.25rem;  /* 20px */
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
+
 </style>

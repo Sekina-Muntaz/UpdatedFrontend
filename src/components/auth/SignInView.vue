@@ -27,10 +27,10 @@
     <div class="login-form__group">
       <div class="login-form__row">
         <label class="login-form__label" for="password">Password</label>
-       
+
         <RouterLink to="/reset-password" class="login-form__forgot">
-  Forgot password?
-</RouterLink>
+          Forgot password?
+        </RouterLink>
       </div>
 
       <div class="login-form__password-wrap">
@@ -55,21 +55,21 @@
         </button>
       </div>
     </div>
-
     <BaseButton
       type="submit"
       :disabled="!isFormValid"
       variant="signin"
       :loading="isSubmitting"
-      
     >
-    {{ isSubmitting ? 'Signing in...' : 'Sign in' }}
-      
+      {{ isSubmitting ? "Signing in..." : "Sign in" }}
+      <template #icon>
+        <img :src="forwardIcon" alt="" />
+      </template>
     </BaseButton>
 
     <p class="login-form__helper">
-      Need access? Coffee DSS does not offer public registration. Contact
-      your system administrator to be provisioned.
+      Need access? Coffee DSS does not offer public registration. Contact your
+      system administrator to be provisioned.
     </p>
   </form>
 </template>
@@ -83,6 +83,9 @@ import AppAlert from "@/components/base/AppAlert.vue";
 import showPasswordIcon from "@/assets/icons/show-password.svg";
 import hidePasswordIcon from "@/assets/icons/hide-password.svg";
 import authErrorIcon from "@/assets/icons/auth-error.svg";
+import forwardIcon from "@/assets/icons/forward.svg";
+
+const MULTIFACTOR_ENABLED = import.meta.env.VITE_MULTIFACTOR === "true";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -105,20 +108,40 @@ const handleLogin = async () => {
   isSubmitting.value = true;
 
   try {
-    await authStore.login({
+    const response = await authStore.login({
       username: form.username,
       password: form.password,
+      multifactor: MULTIFACTOR_ENABLED,
     });
 
-    // router.push("/app/dashboard");
-    router.push({ name: "dashboard" });
+    if (response?.mfaRequired) {
+      const userId = String(response.userId ?? "");
+
+      if (!userId) {
+        throw new Error("OTP flow initiated but userId was not returned.");
+      }
+
+      // optional: preserve for refresh/revisit on OTP screen
+      sessionStorage.setItem("pendingOtpUserId", userId);
+      sessionStorage.setItem("pendingOtpUsername", form.username);
+
+      router.push({
+        name: "verifyOtp",
+        query: {
+          userId,
+          username: form.username,
+        },
+      });
+    } else {
+      router.push({ name: "dashboard" });
+    }
   } catch (error) {
     errorMessage.value =
       error.response?.data?.message ||
       error.response?.data?.error ||
       error.message ||
       "Login failed. Please verify your credentials.";
-  }finally {
+  } finally {
     isSubmitting.value = false;
   }
 };

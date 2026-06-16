@@ -2,12 +2,12 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 
 const LoginView = () => import("@/views/auth/LoginView.vue");
-const ProfileView = () => import("@/views/profile/ProfileView.vue");
+
 const NotFoundView = () => import("@/views/NotFoundView.vue");
 const LandingPageView = () => import("@/views/LandingPage.vue");
 const ResetPasswordView = () => import("@/views/auth/ResetPasswordView.vue");
 const CheckEmailView = () => import("@/views/auth/CheckEmailView.vue");
-
+const VerifyOtpView= () => import("@/views/auth/VerifyOtpView.vue")
 const DashboardLayout = () => import("@/layouts/DashboardLayout.vue");
 
 /**
@@ -40,9 +40,14 @@ const router = createRouter({
     },
     {
       path: "/check-email",
-      name: "CheckEmail",
+      name: "checkEmail",
       component: CheckEmailView,
       meta: { guestOnly: true },
+    },
+    {
+      path: "/verify-otp",
+      name: "verifyOtp",
+      component: VerifyOtpView,
     },
 
     /**

@@ -1,5 +1,5 @@
 <template>
-  <button
+  <!-- <button
     class="base-button"
     :class="[
       `base-button--${variant}`,
@@ -10,12 +10,10 @@
     :type="type"
     :disabled="disabled || loading"
   >
-    <!-- <span v-if="$slots.icon" class="base-button__icon">
-      <slot name="icon" />
-    </span> -->
+
 
     
-<span v-if="$slots.icon && !loading" class="base-button__icon"> <!-- CHANGED -->
+<span v-if="$slots.icon && !loading" class="base-button__icon"> 
       <slot name="icon" />
     </span>
       <span class="base-button__label">
@@ -25,7 +23,42 @@
       <img :src="spinner" alt="Loading..." class="base-button__spinner" />
     </span>
   
-  </button>
+  </button> -->
+  <button
+  class="base-button"
+  :class="[
+    `base-button--${variant}`,
+    `base-button--${size}`,
+    { 'base-button--loading': loading }
+  ]"
+  :type="type"
+  :disabled="disabled || loading"
+>
+  <!-- icon before label for non-submit buttons -->
+  <span
+    v-if="$slots.icon && !loading && type !== 'submit'"
+    class="base-button__icon"
+  >
+    <slot name="icon" />
+  </span>
+
+  <span class="base-button__label">
+    <slot />
+  </span>
+
+  <!-- icon after label for submit buttons -->
+  <span
+    v-if="$slots.icon && !loading && type === 'submit'"
+    class="base-button__icon"
+  >
+    <slot name="icon" />
+  </span>
+
+  <!-- spinner always after label -->
+  <span v-if="loading" class="base-button__icon">
+    <img :src="spinner" alt="Loading..." class="base-button__spinner"/>
+    </span>
+    </button>
 </template>
 
 <script setup>

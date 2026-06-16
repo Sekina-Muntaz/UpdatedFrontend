@@ -33,6 +33,11 @@
       type="submit"
       :disabled="submitting || !isValid"
     >
+
+     <template #icon>
+        <img :src="forwardIcon" alt="" />
+      </template>
+   
       {{ submitting ? "Sending..." : "Send reset link" }}
     </BaseButton>
 
@@ -56,6 +61,8 @@ import BaseButton from "@/components/base/BaseButton.vue";
 import AppAlert from "@/components/base/AppAlert.vue";
 import authErrorIcon from "@/assets/icons/auth-error.svg";
 import backIcon from "@/assets/icons/back-arrow-sign-in.svg";
+import forwardIcon from "@/assets/icons/forward.svg";
+
 import { useAuthStore } from "@/stores/auth";
 
 
@@ -87,7 +94,7 @@ const handleSubmit = async () => {
 
     // Success -> go straight to check email page
     router.push({
-      name: "CheckEmail",
+      name: "checkEmail",
       query: { email: email.value }
     });
   } catch (error) {

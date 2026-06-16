@@ -17,6 +17,12 @@ export function requestPasswordResetApi(payload) {
   return api.post('/token/request-password-reset', payload)
 }
 
+
+export const validateOtpApi = (payload) => {
+  return api.post('/token/validate-otp', payload)
+}
+
+
 export function getCurrentUserApi() {
   return api.get('/users/me')
 }
