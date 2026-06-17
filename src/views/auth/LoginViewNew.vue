@@ -123,7 +123,7 @@
 <script setup>
 import { computed, reactive, ref } from "vue";
 import { useRouter, RouterLink } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/auth.store";
 import AppLogo from "@/components/shared/AppLogo.vue";
 import AppAlert from "../../components/base/AppAlert.vue";
 import loginVisualBg from "@/assets/images/login-image.svg";

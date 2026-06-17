@@ -63,7 +63,7 @@ import authErrorIcon from "@/assets/icons/auth-error.svg";
 import backIcon from "@/assets/icons/back-arrow-sign-in.svg";
 import forwardIcon from "@/assets/icons/forward.svg";
 
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/auth.store";
 
 
 const router = useRouter();

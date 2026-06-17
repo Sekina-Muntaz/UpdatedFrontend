@@ -1,46 +1,59 @@
-const TOKEN_KEY = 'access_token'
-const REFRESH_TOKEN_KEY = 'refresh_token'
-const USER_KEY = 'auth_user'
+const TOKEN_KEY = 'token'
+const REFRESH_TOKEN_KEY = 'refreshToken'
+const USER_KEY = 'user'
 
-export function setToken(token) {
-  localStorage.setItem(TOKEN_KEY, token)
-}
+const LEGACY_KEYS = [
+  'access_token',
+  'refresh_token',
+  'auth_user',
+  'accessToken',
+  'refreshToken',
+  'authUser'
+]
 
 export function getToken() {
-  return localStorage.getItem(TOKEN_KEY)
+  const value = localStorage.getItem(TOKEN_KEY)
+  return value && value !== 'null' ? value : null
 }
 
-export function removeToken() {
-  localStorage.removeItem(TOKEN_KEY)
-}
-
-export function setRefreshToken(token) {
-  localStorage.setItem(REFRESH_TOKEN_KEY, token)
+export function setToken(token) {
+  if (token) {
+    localStorage.setItem(TOKEN_KEY, token.startsWith('Bearer ') ? token.slice(7) : token)
+  } else {
+    localStorage.removeItem(TOKEN_KEY)
+  }
 }
 
 export function getRefreshToken() {
-  return localStorage.getItem(REFRESH_TOKEN_KEY)
+  const value = localStorage.getItem(REFRESH_TOKEN_KEY)
+  return value && value !== 'null' ? value : null
 }
 
-export function removeRefreshToken() {
-  localStorage.removeItem(REFRESH_TOKEN_KEY)
-}
-
-export function setUser(user) {
-  localStorage.setItem(USER_KEY, JSON.stringify(user))
+export function setRefreshToken(token) {
+  if (token) {
+    localStorage.setItem(REFRESH_TOKEN_KEY, token)
+  } else {
+    localStorage.removeItem(REFRESH_TOKEN_KEY)
+  }
 }
 
 export function getUser() {
   const raw = localStorage.getItem(USER_KEY)
-  return raw ? JSON.parse(raw) : null
+  return raw && raw !== 'null' ? JSON.parse(raw) : null
 }
 
-export function removeUser() {
-  localStorage.removeItem(USER_KEY)
+export function setUser(user) {
+  if (user) {
+    localStorage.setItem(USER_KEY, JSON.stringify(user))
+  } else {
+    localStorage.removeItem(USER_KEY)
+  }
 }
 
 export function clearAuthStorage() {
-  removeToken()
-  removeRefreshToken()
-  removeUser()
+  localStorage.removeItem(TOKEN_KEY)
+  localStorage.removeItem(REFRESH_TOKEN_KEY)
+  localStorage.removeItem(USER_KEY)
+
+  LEGACY_KEYS.forEach((key) => localStorage.removeItem(key))
 }

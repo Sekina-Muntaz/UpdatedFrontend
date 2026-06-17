@@ -5,6 +5,13 @@
     <p class="login-form__subtitle">
       Authorized stakeholders only. Enter your credentials to continue.
     </p>
+    
+      <AppAlert
+      v-if="sessionExpiredMessage"
+      variant="error"
+      :message="sessionExpiredMessage"
+      :icon="authErrorIcon"
+    />
 
     <AppAlert
       v-if="errorMessage"
@@ -75,9 +82,9 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
+import { computed, reactive, ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth.store";
 import BaseButton from "@/components/base/BaseButton.vue";
 import AppAlert from "@/components/base/AppAlert.vue";
 import showPasswordIcon from "@/assets/icons/show-password.svg";
@@ -88,6 +95,7 @@ import forwardIcon from "@/assets/icons/forward.svg";
 const MULTIFACTOR_ENABLED = import.meta.env.VITE_MULTIFACTOR === "true";
 
 const router = useRouter();
+const route = useRoute();
 const authStore = useAuthStore();
 
 const form = reactive({
@@ -98,10 +106,42 @@ const form = reactive({
 const errorMessage = ref("");
 const showPassword = ref(false);
 const isSubmitting = ref(false);
+const showSessionExpiredAlert = ref(false);
+
+onMounted(() => {
+  if (route.query.sessionExpired === "true") {
+    showSessionExpiredAlert.value = true;
+
+    // remove sessionExpired from URL after showing it once
+    const newQuery = { ...route.query };
+    delete newQuery.sessionExpired;
+
+    router.replace({
+      path: route.path,
+      query: newQuery,
+    });
+  }
+});
 
 const isFormValid = computed(() => {
   return form.username.trim() !== "" && form.password.trim() !== "";
 });
+
+const sessionExpiredMessage = computed(() => {
+  return showSessionExpiredAlert.value
+    ? "Your session has expired. Please sign in again."
+    : "";
+});
+
+const getPostLoginRedirect = () => {
+  const redirect = route.query.redirect;
+
+  if (typeof redirect === "string" && redirect.startsWith("/")) {
+    return redirect;
+  }
+
+  return "/app/dashboard";
+};
 
 const handleLogin = async () => {
   errorMessage.value = "";
@@ -109,7 +149,7 @@ const handleLogin = async () => {
 
   try {
     const response = await authStore.login({
-      username: form.username,
+      username: form.username.trim(),
       password: form.password,
       multifactor: MULTIFACTOR_ENABLED,
     });
@@ -121,20 +161,22 @@ const handleLogin = async () => {
         throw new Error("OTP flow initiated but userId was not returned.");
       }
 
-      // optional: preserve for refresh/revisit on OTP screen
       sessionStorage.setItem("pendingOtpUserId", userId);
-      sessionStorage.setItem("pendingOtpUsername", form.username);
+      sessionStorage.setItem("pendingOtpUsername", form.username.trim());
 
-      router.push({
+      await router.push({
         name: "verifyOtp",
         query: {
           userId,
-          username: form.username,
+          username: form.username.trim(),
+          redirect: getPostLoginRedirect(),
         },
       });
-    } else {
-      router.push({ name: "dashboard" });
+
+      return;
     }
+
+    await router.replace(getPostLoginRedirect());
   } catch (error) {
     errorMessage.value =
       error.response?.data?.message ||
@@ -146,6 +188,7 @@ const handleLogin = async () => {
   }
 };
 </script>
+
 
 <style scoped>
 .login-form {

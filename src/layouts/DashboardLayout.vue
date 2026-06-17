@@ -47,7 +47,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { RouterView, useRoute, useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/auth.store";
 
 import DashboardSideNav from "@/components/dashboard/DashboardSideNav.vue";
 import DashboardTopNav from "@/components/dashboard/DashboardTopNav.vue";

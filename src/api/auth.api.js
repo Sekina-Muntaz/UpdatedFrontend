@@ -1,28 +1,26 @@
-import api from './axios'
+
+import apiClient from '@/api/client'
 
 export function loginApi(payload) {
-  return api.post('/token/generate-token', payload)
+  return apiClient.post('/token/generate-token', payload)
 }
 
-export function logoutApi(username) {
-  return api.post(`/token/logout/${encodeURIComponent(username)}`)
+export function validateOtpApi(payload) {
+  return apiClient.post('/token/validate-otp', payload)
 }
 
 export function refreshTokenApi(payload) {
-  return api.post('/token/refresh', payload)
+  return apiClient.post('/token/refresh-token', payload)
 }
 
-
-export function requestPasswordResetApi(payload) {
-  return api.post('/token/request-password-reset', payload)
+export function logoutApi(payload) {
+  return apiClient.post('/token/logout', payload)
 }
-
-
-export const validateOtpApi = (payload) => {
-  return api.post('/token/validate-otp', payload)
-}
-
 
 export function getCurrentUserApi() {
-  return api.get('/users/me')
+  return apiClient.get('/api/user/current')
+}
+
+export function requestPasswordResetApi(payload) {
+  return apiClient.post('/token/request-password-reset', payload)
 }

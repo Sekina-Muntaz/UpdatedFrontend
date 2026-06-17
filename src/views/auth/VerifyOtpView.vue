@@ -16,7 +16,7 @@ import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AuthSplitLayout from '@/components/auth/AuthSplitLayout.vue'
 import VerifyOtpPanel from '@/components/auth/VerifyOtpPanel.vue'
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth.store'
 const errorMessage = ref("");
 
 const route = useRoute()
